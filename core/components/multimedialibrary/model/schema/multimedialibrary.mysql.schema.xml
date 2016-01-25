@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="multimedialibrary" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1">
+	<object class="MultimediaLibrary" table="multimedia_library" extends="xPDOSimpleObject">
+		<field key="parentid" dbtype="int" precision="10" phptype="integer" null="false" index="index" />
+		<field key="titles" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="artists" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="albums" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="tracks" dbtype="varchar" precision="7" phptype="string" null="false" default="" />
+		<field key="years" dbtype="year" precision="4" phptype="string" null="false" default="0000" index="index" />
+		<field key="genres" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="tags" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="remix" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="filename" dbtype="varchar" precision="255" phptype="string" null="false" index="unique" />
+		<field key="filename_rename" dbtype="varchar" precision="255" phptype="string" null="true" />
+		<field key="filesize" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="fileformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="file_timestamp" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="file_modified" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="play_seconds" dbtype="decimal" precision="7,2" phptype="float" null="false" default="0.00" />
+		<field key="track_volume" dbtype="float" phptype="float" null="false" default="0" />
+		<field key="md5_file" dbtype="varchar" precision="32" phptype="string" null="false" default="" />
+		<field key="disabled" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+
+		<alias key="authors" field="artists" />
+		<alias key="topics" field="albums" />
+		<alias key="playtime" field="play_seconds" />
+
+		<index alias="UFILENAME" name="UFILENAME" primary="false" unique="true" type="BTREE" >
+			<column key="filename" length="" collation="A" null="false" />
+		</index>
+		<index alias="ALBUMINDEX" name="ALBUMINDEX" primary="false" unique="false" type="BTREE" >
+			<column key="albums" length="" collation="A" null="false" />
+		</index>
+		<index alias="YEARSINDEX" name="YEARSINDEX" primary="false" unique="false" type="BTREE" >
+			<column key="years" length="" collation="A" null="false" />
+		</index>
+		<index alias="ARTISTSINDEX" name="ARTISTSINDEX" primary="false" unique="false" type="BTREE" >
+			<column key="artists" length="" collation="A" null="false" />
+		</index>
+		<index alias="PARENTS" name="PARENTS" primary="false" unique="false" type="BTREE" >
+			<column key="parentid" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="Parent" class="MultimediaLibrary" local="parentid" foreign="id" cardinality="one" owner="foreign" />
+        <composite alias="Info" class="MultimediaLibraryInfo" local="id" foreign="internalKey" cardinality="one" owner="local" />
+        <composite alias="Content" class="MultimediaLibraryInfo" local="id" foreign="multimedialibrary" cardinality="many" owner="local" />		
+	</object>
+	
+	<object class="MultimediaLibraryContent" table="multimedia_library_content" extends="xPDOSimpleObject">
+		<field key="multimedialibrary" dbtype="int" precision="10" phptype="integer" null="false" index="index" />
+		<field key="resource_id" dbtype="int" precision="10" phptype="integer" null="false" />
+		<field key="library_id" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="content" dbtype="text" phptype="string" null="false" />
+		<field key="content_type" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="createdby" dbtype="int" precision="10" phptype="integer" null="false" />
+		<field key="createddate" dbtype="datetime" phptype="datetime" null="false" />
+
+		<index alias="CONTENTTYPE" name="CONTENTTYPE" primary="false" unique="false" type="BTREE" >
+			<column key="multimedialibrary" length="" collation="A" null="false" />
+			<column key="content_type" length="" collation="A" null="false" />
+		</index>
+		<index alias="PARENTS" name="PARENTS" primary="false" unique="false" type="BTREE" >
+			<column key="multimedialibrary" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="ContentLibrary" class="MultimediaLibrary" local="parentid" foreign="id" cardinality="one" owner="foreign" />
+        <composite alias="Version" class="MultimediaLibraryContentVersion" local="id" foreign="contentid" cardinality="many" owner="local" />
+	</object>
+	
+	<object class="MultimediaLibraryContentVersion" table="multimedia_library_content_version" extends="xPDOSimpleObject">
+		<field key="contentid" dbtype="int" precision="10" phptype="integer" null="false" index="index" />
+		<field key="content" dbtype="text" phptype="string" null="false" />
+		<field key="editedby" dbtype="int" precision="11" phptype="integer" null="false" />
+		<field key="editeddate" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="active" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+
+		<index alias="PARENTS" name="PARENTS" primary="false" unique="false" type="BTREE" >
+			<column key="contentid" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="ContentVersion" class="MultimediaLibrary" local="contentid" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	
+	<object class="MultimediaLibraryInfo" table="multimedia_library_info" extends="xPDOSimpleObject">
+		<field key="internalKey" dbtype="int" precision="10" phptype="integer" null="false" index="unique" />
+		<field key="audio_dataformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="video_dataformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="audio_bitrate" dbtype="float" phptype="float" null="false" default="0" />
+		<field key="video_bitrate" dbtype="float" phptype="float" null="false" default="0" />
+		<field key="comments" dbtype="text" phptype="string" null="false" />
+		<field key="comments_all" dbtype="longtext" phptype="string" null="false" />
+		<field key="comments_id3v1" dbtype="text" phptype="string" null="false" />
+		<field key="comments_id3v2" dbtype="text" phptype="string" null="false" />
+		<field key="comments_ape" dbtype="text" phptype="string" null="false" />
+		<field key="comments_lyrics3" dbtype="longtext" phptype="string" null="false" />
+		<field key="info_warning" dbtype="longtext" phptype="string" null="false" />
+		<field key="info_error" dbtype="longtext" phptype="string" null="false" />
+		<field key="encoder_options" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="vbr_method" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+		<index alias="PARENT" name="PARENT" primary="false" unique="true" type="BTREE" >
+			<column key="internalKey" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="InfoLibrary" class="MultimediaLibrary" local="internalKey" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+</model>

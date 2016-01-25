@@ -6,3 +6,5 @@ nbproject
 _build/build.properties.php
 \#*
 *Untitle*
+*.xml0
+*.php0
