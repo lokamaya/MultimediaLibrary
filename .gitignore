@@ -1,0 +1,8 @@
+_build/build.config.php
+_build/reverseSchema.php
+config.core.php
+.idea*
+nbproject
+_build/build.properties.php
+\#*
+*Untitle*
