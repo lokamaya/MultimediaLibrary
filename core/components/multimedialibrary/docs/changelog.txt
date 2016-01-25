@@ -1,0 +1,5 @@
+Changelog file for MultimediaLibrary component.
+
+MultimediaLibrary 0.1
+====================================
+- Initialize
