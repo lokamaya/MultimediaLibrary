@@ -1,10 +1,11 @@
 _build/build.config.php
 _build/reverseSchema.php
 config.core.php
-.idea*
+.*
 nbproject
 _build/build.properties.php
 \#*
 *Untitle*
 *.xml0
 *.php0
+*- Copy
