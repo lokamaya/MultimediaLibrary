@@ -14,6 +14,15 @@
  */
 $settings = array();
 
+$settings['multimedialibrary.allowed_extension']= $modx->newObject('modSystemSetting');
+$settings['multimedialibrary.allowed_extension']->fromArray(array(
+    'key' => 'multimedialibrary.allowed_extension',
+    'value' => 'aac,asf,avi,flac,m3u,m4a,m4v,mov,mp1,mp2,mp3,mp4,mpeg,mpg,oga,ogg,ogv,wav,webm,wma,wmv',
+    'xtype' => 'textfield',
+    'namespace' => 'multimedialibrary',
+    'area' => 'site',
+),'',true,true);
+
 $settings['multimedialibrary.path']= $modx->newObject('modSystemSetting');
 $settings['multimedialibrary.path']->fromArray(array(
     'key' => 'multimedialibrary.path',
@@ -66,6 +75,15 @@ $settings['multimedialibrary.url_icecast_stream']->fromArray(array(
     'xtype' => 'textfield',
     'namespace' => 'multimedialibrary',
     'area' => 'site',
+),'',true,true);
+
+$settings['multimedialibrary.table_checked']= $modx->newObject('modSystemSetting');
+$settings['multimedialibrary.table_checked']->fromArray(array(
+    'key' => 'multimedialibrary.table_checked',
+    'value' => '0',
+    'xtype' => 'numberfield',
+    'namespace' => 'multimedialibrary',
+    'area' => 'system',
 ),'',true,true);
 
 return $settings;

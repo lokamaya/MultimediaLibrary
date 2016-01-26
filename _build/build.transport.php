@@ -1,19 +1,19 @@
 <?php
 /**
- * MultimediaLibrary Build Script
+ * MultimediaLibrary
  *
- * @package multimedialibrary
-**/
+ * @package MultimediaLibrary
+ * @author Jason Coward <jason@modx.com>
+ */
 $tstart = microtime(true);
 set_time_limit(0);
 
 /* set package info */
 define('PKG_NAME',      'MultimediaLibrary');
-define('PKG_NAME_LOWER',strtolower(MultimediaLibrary));
+define('PKG_NAME_LOWER',strtolower(PKG_NAME));
 define('PKG_VERSION',   '0.1');
 define('PKG_RELEASE',   'alpha');
 
-echo "<pre>";
 /* define sources */
 $root = dirname(dirname(__FILE__)) . '/';
 $sources = array(
@@ -33,59 +33,43 @@ unset($root);
 /* instantiate MODx */
 require_once $sources['build'].'build.config.php';
 require_once MODX_CORE_PATH . 'model/modx/modx.class.php';
-require_once $sources['build'] . '/includes/functions.php';
+require_once $sources['build'] . '/data/functions.php';
 
 $modx= new modX();
 $modx->initialize('mgr');
 $modx->setLogLevel(xPDO::LOG_LEVEL_INFO);
 $modx->setLogTarget('ECHO');
+echo "<pre>\n";
 
 /* load builder */
-$modx->log(xPDO::LOG_LEVEL_INFO,'Creating package builder'); flush();
 $modx->loadClass('transport.modPackageBuilder', '', false, true);
-
 $builder = new modPackageBuilder($modx);
 $builder->createPackage(PKG_NAME, PKG_VERSION, PKG_RELEASE);
-$builder->registerNamespace(PKG_NAME_LOWER,false,true,'{core_path}components/'.PKG_NAME_LOWER.'/');
+$builder->registerNamespace(PKG_NAME_LOWER, false, true, '{core_path}components/' . PKG_NAME_LOWER . '/');
 
-
-
-/* SNIPPETS */
-/* ------------------------------------------------------ */
-$modx->log(xPDO::LOG_LEVEL_INFO,'Adding in plugin.'); flush();
-
-$snippets= $modx->newObject('modSnippet');
-$snippets->set('name', PKG_NAME . 'Debug');
-$snippets->set('description', '<strong>'.PKG_VERSION.'-'.PKG_RELEASE.'</strong> Output data entries from LDAP');
-$snippets->set('category', 0);
-$snippets->set('snippet', getSnippetContent($sources['snippets'].'snippet.multimedialibrary.php'));
-
-//add properties to snippet
+/* create plugin object */
+$modx->log(xPDO::LOG_LEVEL_INFO,'Adding in snippet.'); flush();
+$object= $modx->newObject('modSnippet');
+$object->set('name', PKG_NAME);
+$object->set('description', '<strong>'.PKG_VERSION.'-'.PKG_RELEASE.'</strong> Basic snippet for ' . PKG_NAME . '.');
+$object->set('category', 0);
+$object->set('snippet', getSnippetContent($sources['snippets'].'snippet.multimedialibrary.php'));
 $properties = include $sources['data'].'snippet.multimedialibrary.properties.php';
-$snippets->setProperties($properties);
+$object->setProperties($properties);
 unset($properties);
 
-//create vehicle for plugin
-$modx->log(modX::LOG_LEVEL_INFO,'Create snippet vehicle'); flush();
-$vehicle = $builder->createVehicle($snippets, array (
+
+/* create a transport vehicle for the data object */
+$vehicle = $builder->createVehicle($object, array(
     xPDOTransport::PRESERVE_KEYS => false,
     xPDOTransport::UPDATE_OBJECT => true,
     xPDOTransport::UNIQUE_KEY => 'name',
-));
-
-$modx->log(modX::LOG_LEVEL_INFO,'Adding file resolvers to snippet...');
-$vehicle->resolve('file',array(
-    'source' => $sources['source_assets'],
-    'target' => "return MODX_ASSETS_PATH . 'components/';",
 ));
 $vehicle->resolve('file',array(
     'source' => $sources['source_core'],
     'target' => "return MODX_CORE_PATH . 'components/';",
 ));
 $builder->putVehicle($vehicle);
-unset($vehicle,$snippet);
-
-
 
 /* SYSTEM SETTING */
 /* ------------------------------------------------------ */
@@ -102,21 +86,24 @@ foreach ($settings as $setting) {
     $builder->putVehicle($vehicle);
 }
 
+$modx->log(modX::LOG_LEVEL_INFO,'Adding in PHP resolvers...');
+$vehicle->resolve('php',array(
+    'source' => $sources['resolvers'] . 'resolve.tables.php',
+));
+$builder->putVehicle($vehicle);
+unset($vehicle,$snippet);
 
 /* now pack in the license file, readme and setup options */
-/* ------------------------------------------------------ */
 $builder->setPackageAttributes(array(
     'license' => file_get_contents($sources['docs'] . 'license.txt'),
     'readme' => file_get_contents($sources['docs'] . 'readme.txt'),
     'changelog' => file_get_contents($sources['docs'] . 'changelog.txt'),
     //'setup-options' => array(
-    //   'source' => $sources['build'].'setup.options.php',
+    //    'source' => $sources['build'] . 'setup.options.php',
     //),
 ));
-$modx->log(modX::LOG_LEVEL_INFO,'Added package attributes and setup options.');
 
 /* zip up the package */
-$modx->log(modX::LOG_LEVEL_INFO,'Packing up transport package zip...');
 $builder->pack();
 
 $tend= microtime(true);
@@ -125,5 +112,5 @@ $totalTime= sprintf("%2.4f seconds", $totalTime);
 
 $modx->log(xPDO::LOG_LEVEL_INFO, "Package Built.");
 $modx->log(xPDO::LOG_LEVEL_INFO, "Execution time: {$totalTime}");
-echo "</pre>";
+echo "\n</pre>\n";
 exit();
