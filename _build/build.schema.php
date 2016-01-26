@@ -23,6 +23,7 @@ $modx->setLogTarget('ECHO');
 $root = dirname(dirname(__FILE__)).'/';
 $sources = array(
     'root' => $root,
+    'data' => $root.'_build/data/',
     'core' => $root.'core/components/multimedialibrary/',
     'model' => $root.'core/components/multimedialibrary/model/',
     'schema' => $root.'core/components/multimedialibrary/model/schema/',
@@ -31,15 +32,21 @@ $sources = array(
 );
 $manager= $modx->getManager();
 $generator= $manager->getGenerator();
-
 if (!is_dir($sources['model'])) {
     $modx->log(modX::LOG_LEVEL_ERROR,'Model directory not found!');
-    die();
+    die('Model directory not found!');
 }
 if (!file_exists($sources['schema_file'])) {
     $modx->log(modX::LOG_LEVEL_ERROR,'Schema file not found!');
-    die();
+    die('Schema file not found!');
 }
+
+error_reporting(E_ALL);
+
+$generator->classTemplate = file_get_contents($sources['data'].'tpl/tpl_class.tpl');
+$generator->platformTemplate = file_get_contents($sources['data'].'tpl/tpl_classplatform.tpl');
+$generator->mapHeader = file_get_contents($sources['data'].'tpl/tpl_mapheader.tpl');
+
 $generator->parseSchema($sources['schema_file'],$sources['model']);
 
 
