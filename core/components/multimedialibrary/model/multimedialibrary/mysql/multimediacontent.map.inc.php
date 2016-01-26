@@ -1,8 +1,8 @@
 <?php
-$xpdo_meta_map['MultimediaLibraryContent']= array (
+$xpdo_meta_map['MultimediaContent']= array (
   'package' => 'multimedialibrary',
   'version' => '1.1',
-  'table' => 'multimedia_library_content',
+  'table' => 'multimedia_content',
   'extends' => 'xPDOSimpleObject',
   'fields' => 
   array (
@@ -106,6 +106,28 @@ $xpdo_meta_map['MultimediaLibraryContent']= array (
           'null' => false,
         ),
       ),
+    ),
+  ),
+  'composites' => 
+  array (
+    'Version' => 
+    array (
+      'class' => 'MultimediaContentVersion',
+      'local' => 'id',
+      'foreign' => 'contentid',
+      'cardinality' => 'many',
+      'owner' => 'local',
+    ),
+  ),
+  'aggregates' => 
+  array (
+    'ContentLibrary' => 
+    array (
+      'class' => 'MultimediaCollection',
+      'local' => 'parentid',
+      'foreign' => 'id',
+      'cardinality' => 'one',
+      'owner' => 'foreign',
     ),
   ),
 );

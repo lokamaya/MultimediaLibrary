@@ -3,9 +3,9 @@
 $xpdo_meta_map = array (
   'xPDOSimpleObject' => 
   array (
-    0 => 'MultimediaLibrary',
-    1 => 'MultimediaLibraryContent',
-    2 => 'MultimediaLibraryContentVersion',
-    3 => 'MultimediaLibraryInfo',
+    0 => 'MultimediaCollection',
+    1 => 'MultimediaCollectionInfo',
+    2 => 'MultimediaContent',
+    3 => 'MultimediaContentVersion',
   ),
 );

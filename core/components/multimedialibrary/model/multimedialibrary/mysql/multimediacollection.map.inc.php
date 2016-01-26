@@ -1,8 +1,8 @@
 <?php
-$xpdo_meta_map['MultimediaLibrary']= array (
+$xpdo_meta_map['MultimediaCollection']= array (
   'package' => 'multimedialibrary',
   'version' => '1.1',
-  'table' => 'multimedia_library',
+  'table' => 'multimedia_collection',
   'extends' => 'xPDOSimpleObject',
   'fields' => 
   array (
@@ -183,6 +183,12 @@ $xpdo_meta_map['MultimediaLibrary']= array (
       'default' => 0,
     ),
   ),
+  'fieldAliases' => 
+  array (
+    'authors' => 'artists',
+    'topics' => 'albums',
+    'playtime' => 'play_seconds',
+  ),
   'indexes' => 
   array (
     'UFILENAME' => 
@@ -264,6 +270,36 @@ $xpdo_meta_map['MultimediaLibrary']= array (
           'null' => false,
         ),
       ),
+    ),
+  ),
+  'composites' => 
+  array (
+    'Info' => 
+    array (
+      'class' => 'MultimediaCollectionInfo',
+      'local' => 'id',
+      'foreign' => 'internalKey',
+      'cardinality' => 'one',
+      'owner' => 'local',
+    ),
+    'Content' => 
+    array (
+      'class' => 'MultimediaContent',
+      'local' => 'id',
+      'foreign' => 'multimedialibrary',
+      'cardinality' => 'many',
+      'owner' => 'local',
+    ),
+  ),
+  'aggregates' => 
+  array (
+    'Parent' => 
+    array (
+      'class' => 'MultimediaCollection',
+      'local' => 'parentid',
+      'foreign' => 'id',
+      'cardinality' => 'one',
+      'owner' => 'foreign',
     ),
   ),
 );
