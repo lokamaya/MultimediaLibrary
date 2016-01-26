@@ -8,23 +8,22 @@
 /**
  * @staticvar array $xpdo_meta_map for mapping related table
  */
-$xpdo_meta_map['MultimediaContent']= array (
+$xpdo_meta_map['MultimediaUserHistory']= array (
   'package' => 'multimedialibrary',
   'version' => '1.1',
-  'table' => 'multimedia_content',
+  'table' => 'multimedia_user_history',
   'extends' => 'xPDOSimpleObject',
   'fields' => 
   array (
-    'contentkey' => NULL,
-    'content_json' => '[]',
-    'content_type' => 'image',
-    'createdby' => NULL,
-    'createdon' => 0,
-    'is_disabled' => 0,
+    'historykey' => NULL,
+    'userid' => NULL,
+    'history_type' => 'play',
+    'historyon' => 0,
+    'history_message' => '[]',
   ),
   'fieldMeta' => 
   array (
-    'contentkey' => 
+    'historykey' => 
     array (
       'dbtype' => 'integer',
       'attributes' => 'unsigned',
@@ -33,30 +32,24 @@ $xpdo_meta_map['MultimediaContent']= array (
       'null' => false,
       'index' => 'index',
     ),
-    'content_json' => 
-    array (
-      'dbtype' => 'longtext',
-      'phptype' => 'string',
-      'null' => false,
-      'default' => '[]',
-    ),
-    'content_type' => 
-    array (
-      'dbtype' => 'varchar',
-      'precision' => '255',
-      'phptype' => 'string',
-      'null' => false,
-      'default' => 'image',
-    ),
-    'createdby' => 
+    'userid' => 
     array (
       'dbtype' => 'integer',
       'attributes' => 'unsigned',
       'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
+      'index' => 'index',
     ),
-    'createdon' => 
+    'history_type' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '16',
+      'phptype' => 'string',
+      'null' => false,
+      'default' => 'play',
+    ),
+    'historyon' => 
     array (
       'dbtype' => 'integer',
       'precision' => '20',
@@ -64,26 +57,25 @@ $xpdo_meta_map['MultimediaContent']= array (
       'null' => false,
       'default' => 0,
     ),
-    'is_disabled' => 
+    'history_message' => 
     array (
-      'dbtype' => 'tinyint',
-      'precision' => '1',
-      'phptype' => 'integer',
+      'dbtype' => 'longtext',
+      'phptype' => 'string',
       'null' => false,
-      'default' => 0,
+      'default' => '[]',
     ),
   ),
   'indexes' => 
   array (
-    'COLLECTIONID' => 
+    'COLID' => 
     array (
-      'alias' => 'COLLECTIONID',
+      'alias' => 'COLID',
       'primary' => false,
       'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'contentkey' => 
+        'historykey' => 
         array (
           'length' => '',
           'collation' => 'A',
@@ -91,38 +83,21 @@ $xpdo_meta_map['MultimediaContent']= array (
         ),
       ),
     ),
-    'CONTENTTYPE' => 
+    'UID' => 
     array (
-      'alias' => 'CONTENTTYPE',
+      'alias' => 'UID',
       'primary' => false,
       'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'contentkey' => 
-        array (
-          'length' => '',
-          'collation' => 'A',
-          'null' => false,
-        ),
-        'content_type' => 
+        'userid' => 
         array (
           'length' => '',
           'collation' => 'A',
           'null' => false,
         ),
       ),
-    ),
-  ),
-  'composites' => 
-  array (
-    'Version' => 
-    array (
-      'class' => 'MultimediaContentVersion',
-      'local' => 'id',
-      'foreign' => 'contentid',
-      'cardinality' => 'many',
-      'owner' => 'local',
     ),
   ),
   'aggregates' => 
@@ -130,15 +105,15 @@ $xpdo_meta_map['MultimediaContent']= array (
     'Collection' => 
     array (
       'class' => 'MultimediaCollection',
-      'local' => 'contentkey',
+      'local' => 'historykey',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',
     ),
-    'Creator' => 
+    'User' => 
     array (
       'class' => 'modUser',
-      'local' => 'createdby',
+      'local' => 'userid',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',

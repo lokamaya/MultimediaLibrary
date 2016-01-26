@@ -8,23 +8,21 @@
 /**
  * @staticvar array $xpdo_meta_map for mapping related table
  */
-$xpdo_meta_map['MultimediaContent']= array (
+$xpdo_meta_map['MultimediaCollectionComment']= array (
   'package' => 'multimedialibrary',
   'version' => '1.1',
-  'table' => 'multimedia_content',
+  'table' => 'multimedia_collection_comment',
   'extends' => 'xPDOSimpleObject',
   'fields' => 
   array (
-    'contentkey' => NULL,
-    'content_json' => '[]',
-    'content_type' => 'image',
-    'createdby' => NULL,
-    'createdon' => 0,
-    'is_disabled' => 0,
+    'commentkey' => NULL,
+    'userid' => 0,
+    'comment' => '',
+    'addedon' => 0,
   ),
   'fieldMeta' => 
   array (
-    'contentkey' => 
+    'commentkey' => 
     array (
       'dbtype' => 'integer',
       'attributes' => 'unsigned',
@@ -33,41 +31,27 @@ $xpdo_meta_map['MultimediaContent']= array (
       'null' => false,
       'index' => 'index',
     ),
-    'content_json' => 
-    array (
-      'dbtype' => 'longtext',
-      'phptype' => 'string',
-      'null' => false,
-      'default' => '[]',
-    ),
-    'content_type' => 
-    array (
-      'dbtype' => 'varchar',
-      'precision' => '255',
-      'phptype' => 'string',
-      'null' => false,
-      'default' => 'image',
-    ),
-    'createdby' => 
+    'userid' => 
     array (
       'dbtype' => 'integer',
       'attributes' => 'unsigned',
       'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
+      'default' => 0,
     ),
-    'createdon' => 
+    'comment' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '255',
+      'phptype' => 'string',
+      'null' => false,
+      'default' => '',
+    ),
+    'addedon' => 
     array (
       'dbtype' => 'integer',
       'precision' => '20',
-      'phptype' => 'integer',
-      'null' => false,
-      'default' => 0,
-    ),
-    'is_disabled' => 
-    array (
-      'dbtype' => 'tinyint',
-      'precision' => '1',
       'phptype' => 'integer',
       'null' => false,
       'default' => 0,
@@ -83,7 +67,7 @@ $xpdo_meta_map['MultimediaContent']= array (
       'type' => 'BTREE',
       'columns' => 
       array (
-        'contentkey' => 
+        'commentkey' => 
         array (
           'length' => '',
           'collation' => 'A',
@@ -91,38 +75,33 @@ $xpdo_meta_map['MultimediaContent']= array (
         ),
       ),
     ),
-    'CONTENTTYPE' => 
+    'NONUNIQUEUSER' => 
     array (
-      'alias' => 'CONTENTTYPE',
+      'alias' => 'NONUNIQUEUSER',
       'primary' => false,
       'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'contentkey' => 
+        'commentkey' => 
         array (
           'length' => '',
           'collation' => 'A',
           'null' => false,
         ),
-        'content_type' => 
+        'userid' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+        'addedon' => 
         array (
           'length' => '',
           'collation' => 'A',
           'null' => false,
         ),
       ),
-    ),
-  ),
-  'composites' => 
-  array (
-    'Version' => 
-    array (
-      'class' => 'MultimediaContentVersion',
-      'local' => 'id',
-      'foreign' => 'contentid',
-      'cardinality' => 'many',
-      'owner' => 'local',
     ),
   ),
   'aggregates' => 
@@ -130,15 +109,15 @@ $xpdo_meta_map['MultimediaContent']= array (
     'Collection' => 
     array (
       'class' => 'MultimediaCollection',
-      'local' => 'contentkey',
+      'local' => 'commentkey',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',
     ),
-    'Creator' => 
+    'Member' => 
     array (
       'class' => 'modUser',
-      'local' => 'createdby',
+      'local' => 'userid',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',

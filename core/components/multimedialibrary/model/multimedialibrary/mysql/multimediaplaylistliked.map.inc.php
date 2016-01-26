@@ -8,55 +8,38 @@
 /**
  * @staticvar array $xpdo_meta_map for mapping related table
  */
-$xpdo_meta_map['MultimediaContent']= array (
+$xpdo_meta_map['MultimediaPlaylistLiked']= array (
   'package' => 'multimedialibrary',
   'version' => '1.1',
-  'table' => 'multimedia_content',
-  'extends' => 'xPDOSimpleObject',
+  'table' => 'multimedia_playlist_liked',
+  'extends' => 'xPDOObject',
   'fields' => 
   array (
-    'contentkey' => NULL,
-    'content_json' => '[]',
-    'content_type' => 'image',
-    'createdby' => NULL,
-    'createdon' => 0,
-    'is_disabled' => 0,
+    'playlistid' => NULL,
+    'friendid' => NULL,
+    'addedon' => 0,
   ),
   'fieldMeta' => 
   array (
-    'contentkey' => 
+    'playlistid' => 
     array (
       'dbtype' => 'integer',
       'attributes' => 'unsigned',
       'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
-      'index' => 'index',
+      'index' => 'pk',
     ),
-    'content_json' => 
-    array (
-      'dbtype' => 'longtext',
-      'phptype' => 'string',
-      'null' => false,
-      'default' => '[]',
-    ),
-    'content_type' => 
-    array (
-      'dbtype' => 'varchar',
-      'precision' => '255',
-      'phptype' => 'string',
-      'null' => false,
-      'default' => 'image',
-    ),
-    'createdby' => 
+    'friendid' => 
     array (
       'dbtype' => 'integer',
       'attributes' => 'unsigned',
       'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
+      'index' => 'pk',
     ),
-    'createdon' => 
+    'addedon' => 
     array (
       'dbtype' => 'integer',
       'precision' => '20',
@@ -64,26 +47,24 @@ $xpdo_meta_map['MultimediaContent']= array (
       'null' => false,
       'default' => 0,
     ),
-    'is_disabled' => 
-    array (
-      'dbtype' => 'tinyint',
-      'precision' => '1',
-      'phptype' => 'integer',
-      'null' => false,
-      'default' => 0,
-    ),
   ),
   'indexes' => 
   array (
-    'COLLECTIONID' => 
+    'PRIMARY' => 
     array (
-      'alias' => 'COLLECTIONID',
-      'primary' => false,
-      'unique' => false,
+      'alias' => 'PRIMARY',
+      'primary' => true,
+      'unique' => true,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'contentkey' => 
+        'playlistid' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+        'friendid' => 
         array (
           'length' => '',
           'collation' => 'A',
@@ -91,54 +72,43 @@ $xpdo_meta_map['MultimediaContent']= array (
         ),
       ),
     ),
-    'CONTENTTYPE' => 
+    'DATEINDEX' => 
     array (
-      'alias' => 'CONTENTTYPE',
+      'alias' => 'DATEINDEX',
       'primary' => false,
       'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'contentkey' => 
+        'playlistid' => 
         array (
           'length' => '',
           'collation' => 'A',
           'null' => false,
         ),
-        'content_type' => 
+        'addedon' => 
         array (
           'length' => '',
           'collation' => 'A',
           'null' => false,
         ),
       ),
-    ),
-  ),
-  'composites' => 
-  array (
-    'Version' => 
-    array (
-      'class' => 'MultimediaContentVersion',
-      'local' => 'id',
-      'foreign' => 'contentid',
-      'cardinality' => 'many',
-      'owner' => 'local',
     ),
   ),
   'aggregates' => 
   array (
-    'Collection' => 
+    'Playlist' => 
     array (
-      'class' => 'MultimediaCollection',
-      'local' => 'contentkey',
+      'class' => 'MultimediaPlaylist',
+      'local' => 'playlistid',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',
     ),
-    'Creator' => 
+    'Friend' => 
     array (
       'class' => 'modUser',
-      'local' => 'createdby',
+      'local' => 'friendid',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',

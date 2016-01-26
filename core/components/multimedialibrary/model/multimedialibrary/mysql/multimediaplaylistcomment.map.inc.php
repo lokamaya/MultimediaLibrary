@@ -8,23 +8,21 @@
 /**
  * @staticvar array $xpdo_meta_map for mapping related table
  */
-$xpdo_meta_map['MultimediaContent']= array (
+$xpdo_meta_map['MultimediaPlaylistComment']= array (
   'package' => 'multimedialibrary',
   'version' => '1.1',
-  'table' => 'multimedia_content',
+  'table' => 'multimedia_playlist_comment',
   'extends' => 'xPDOSimpleObject',
   'fields' => 
   array (
-    'contentkey' => NULL,
-    'content_json' => '[]',
-    'content_type' => 'image',
-    'createdby' => NULL,
-    'createdon' => 0,
-    'is_disabled' => 0,
+    'playlistid' => NULL,
+    'friendid' => NULL,
+    'comment' => '',
+    'addedon' => 0,
   ),
   'fieldMeta' => 
   array (
-    'contentkey' => 
+    'playlistid' => 
     array (
       'dbtype' => 'integer',
       'attributes' => 'unsigned',
@@ -33,30 +31,23 @@ $xpdo_meta_map['MultimediaContent']= array (
       'null' => false,
       'index' => 'index',
     ),
-    'content_json' => 
+    'friendid' => 
     array (
-      'dbtype' => 'longtext',
-      'phptype' => 'string',
+      'dbtype' => 'integer',
+      'precision' => '10',
+      'phptype' => 'integer',
       'null' => false,
-      'default' => '[]',
+      'index' => 'index',
     ),
-    'content_type' => 
+    'comment' => 
     array (
       'dbtype' => 'varchar',
       'precision' => '255',
       'phptype' => 'string',
       'null' => false,
-      'default' => 'image',
+      'default' => '',
     ),
-    'createdby' => 
-    array (
-      'dbtype' => 'integer',
-      'attributes' => 'unsigned',
-      'precision' => '10',
-      'phptype' => 'integer',
-      'null' => false,
-    ),
-    'createdon' => 
+    'addedon' => 
     array (
       'dbtype' => 'integer',
       'precision' => '20',
@@ -64,26 +55,18 @@ $xpdo_meta_map['MultimediaContent']= array (
       'null' => false,
       'default' => 0,
     ),
-    'is_disabled' => 
-    array (
-      'dbtype' => 'tinyint',
-      'precision' => '1',
-      'phptype' => 'integer',
-      'null' => false,
-      'default' => 0,
-    ),
   ),
   'indexes' => 
   array (
-    'COLLECTIONID' => 
+    'PLAYLIST' => 
     array (
-      'alias' => 'COLLECTIONID',
+      'alias' => 'PLAYLIST',
       'primary' => false,
       'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'contentkey' => 
+        'playlistid' => 
         array (
           'length' => '',
           'collation' => 'A',
@@ -91,21 +74,15 @@ $xpdo_meta_map['MultimediaContent']= array (
         ),
       ),
     ),
-    'CONTENTTYPE' => 
+    'USERID' => 
     array (
-      'alias' => 'CONTENTTYPE',
+      'alias' => 'USERID',
       'primary' => false,
       'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (
-        'contentkey' => 
-        array (
-          'length' => '',
-          'collation' => 'A',
-          'null' => false,
-        ),
-        'content_type' => 
+        'friendid' => 
         array (
           'length' => '',
           'collation' => 'A',
@@ -113,32 +90,43 @@ $xpdo_meta_map['MultimediaContent']= array (
         ),
       ),
     ),
-  ),
-  'composites' => 
-  array (
-    'Version' => 
+    'NONUNIQUEUSER' => 
     array (
-      'class' => 'MultimediaContentVersion',
-      'local' => 'id',
-      'foreign' => 'contentid',
-      'cardinality' => 'many',
-      'owner' => 'local',
+      'alias' => 'NONUNIQUEUSER',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'playlistid' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+        'friendid' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
     ),
   ),
   'aggregates' => 
   array (
-    'Collection' => 
+    'Playlist' => 
     array (
-      'class' => 'MultimediaCollection',
-      'local' => 'contentkey',
+      'class' => 'MultimediaPlaylist',
+      'local' => 'playlistid',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',
     ),
-    'Creator' => 
+    'Friend' => 
     array (
       'class' => 'modUser',
-      'local' => 'createdby',
+      'local' => 'friendid',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',

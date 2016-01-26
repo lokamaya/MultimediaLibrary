@@ -1,4 +1,13 @@
 <?php
+/**
+ * MultimediaLibrary for MODX Revolution
+ *
+ * @package multimedialibrary
+ * @author Zaenal/Lokamaya <zaenal[#]lokamaya.com>
+ */
+/**
+ * @staticvar array $xpdo_meta_map for mapping related table
+ */
 $xpdo_meta_map['MultimediaCollection']= array (
   'package' => 'multimedialibrary',
   'version' => '1.1',
@@ -24,13 +33,14 @@ $xpdo_meta_map['MultimediaCollection']= array (
     'play_seconds' => 0,
     'track_volume' => 0,
     'md5_file' => '',
-    'disabled' => 0,
+    'is_disabled' => 0,
   ),
   'fieldMeta' => 
   array (
     'parentid' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
@@ -120,9 +130,9 @@ $xpdo_meta_map['MultimediaCollection']= array (
     ),
     'filesize' => 
     array (
-      'dbtype' => 'int',
-      'precision' => '10',
+      'dbtype' => 'integer',
       'attributes' => 'unsigned',
+      'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
       'default' => 0,
@@ -137,16 +147,18 @@ $xpdo_meta_map['MultimediaCollection']= array (
     ),
     'file_timestamp' => 
     array (
-      'dbtype' => 'int',
-      'precision' => '11',
+      'dbtype' => 'integer',
+      'attributes' => 'unsigned',
+      'precision' => '20',
       'phptype' => 'integer',
       'null' => false,
       'default' => 0,
     ),
     'file_modified' => 
     array (
-      'dbtype' => 'int',
-      'precision' => '11',
+      'dbtype' => 'integer',
+      'attributes' => 'unsigned',
+      'precision' => '20',
       'phptype' => 'integer',
       'null' => false,
       'default' => 0,
@@ -174,7 +186,7 @@ $xpdo_meta_map['MultimediaCollection']= array (
       'null' => false,
       'default' => '',
     ),
-    'disabled' => 
+    'is_disabled' => 
     array (
       'dbtype' => 'tinyint',
       'precision' => '1',
@@ -191,9 +203,9 @@ $xpdo_meta_map['MultimediaCollection']= array (
   ),
   'indexes' => 
   array (
-    'UFILENAME' => 
+    'FILENAMEINDEX' => 
     array (
-      'alias' => 'UFILENAME',
+      'alias' => 'FILENAMEINDEX',
       'primary' => false,
       'unique' => true,
       'type' => 'BTREE',
@@ -274,19 +286,59 @@ $xpdo_meta_map['MultimediaCollection']= array (
   ),
   'composites' => 
   array (
+    'Childs' => 
+    array (
+      'class' => 'MultimediaCollection',
+      'local' => 'id',
+      'foreign' => 'parentid',
+      'cardinality' => 'many',
+      'owner' => 'local',
+    ),
     'Info' => 
     array (
       'class' => 'MultimediaCollectionInfo',
       'local' => 'id',
-      'foreign' => 'internalKey',
+      'foreign' => 'infokey',
       'cardinality' => 'one',
+      'owner' => 'local',
+    ),
+    'Comment' => 
+    array (
+      'class' => 'MultimediaCollectionComment',
+      'local' => 'id',
+      'foreign' => 'commentkey',
+      'cardinality' => 'many',
+      'owner' => 'local',
+    ),
+    'Liked' => 
+    array (
+      'class' => 'MultimediaCollectionLiked',
+      'local' => 'id',
+      'foreign' => 'likedkey',
+      'cardinality' => 'many',
       'owner' => 'local',
     ),
     'Content' => 
     array (
       'class' => 'MultimediaContent',
       'local' => 'id',
-      'foreign' => 'multimedialibrary',
+      'foreign' => 'contentkey',
+      'cardinality' => 'many',
+      'owner' => 'local',
+    ),
+    'PlaylistItem' => 
+    array (
+      'class' => 'MultimediaPlaylistItems',
+      'local' => 'id',
+      'foreign' => 'itemkey',
+      'cardinality' => 'many',
+      'owner' => 'local',
+    ),
+    'History' => 
+    array (
+      'class' => 'MultimediaUserHistory',
+      'local' => 'id',
+      'foreign' => 'historykey',
       'cardinality' => 'many',
       'owner' => 'local',
     ),

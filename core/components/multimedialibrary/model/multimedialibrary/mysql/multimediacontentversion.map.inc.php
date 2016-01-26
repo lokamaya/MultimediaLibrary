@@ -1,4 +1,13 @@
 <?php
+/**
+ * MultimediaLibrary for MODX Revolution
+ *
+ * @package multimedialibrary
+ * @author Zaenal/Lokamaya <zaenal[#]lokamaya.com>
+ */
+/**
+ * @staticvar array $xpdo_meta_map for mapping related table
+ */
 $xpdo_meta_map['MultimediaContentVersion']= array (
   'package' => 'multimedialibrary',
   'version' => '1.1',
@@ -7,41 +16,46 @@ $xpdo_meta_map['MultimediaContentVersion']= array (
   'fields' => 
   array (
     'contentid' => NULL,
-    'content' => NULL,
+    'edited_json' => '[]',
     'editedby' => NULL,
-    'editeddate' => NULL,
-    'active' => 0,
+    'editedon' => 0,
+    'is_active' => 0,
   ),
   'fieldMeta' => 
   array (
     'contentid' => 
     array (
-      'dbtype' => 'int',
+      'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
       'index' => 'index',
     ),
-    'content' => 
+    'edited_json' => 
     array (
-      'dbtype' => 'text',
+      'dbtype' => 'longtext',
       'phptype' => 'string',
       'null' => false,
+      'default' => '[]',
     ),
     'editedby' => 
     array (
-      'dbtype' => 'int',
-      'precision' => '11',
+      'dbtype' => 'integer',
+      'attributes' => 'unsigned',
+      'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
     ),
-    'editeddate' => 
+    'editedon' => 
     array (
-      'dbtype' => 'datetime',
-      'phptype' => 'datetime',
+      'dbtype' => 'integer',
+      'precision' => '20',
+      'phptype' => 'integer',
       'null' => false,
+      'default' => 0,
     ),
-    'active' => 
+    'is_active' => 
     array (
       'dbtype' => 'tinyint',
       'precision' => '1',
@@ -71,10 +85,18 @@ $xpdo_meta_map['MultimediaContentVersion']= array (
   ),
   'aggregates' => 
   array (
-    'ContentVersion' => 
+    'Content' => 
     array (
       'class' => 'MultimediaContent',
       'local' => 'contentid',
+      'foreign' => 'id',
+      'cardinality' => 'one',
+      'owner' => 'foreign',
+    ),
+    'Editor' => 
+    array (
+      'class' => 'modUser',
+      'local' => 'editedby',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',
