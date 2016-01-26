@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model package="multimedialibrary" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1" phpdoc-package="multimedialibrary" phpdoc-subpackage="model">
 	<object class="MultimediaCollection" table="multimedia_collection" extends="xPDOSimpleObject">
-		<field key="parentid" dbtype="int" precision="10" phptype="integer" null="false" index="index" />
+		<field key="parentid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
 		<field key="titles" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
 		<field key="artists" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
 		<field key="albums" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
@@ -12,20 +12,20 @@
 		<field key="remix" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
 		<field key="filename" dbtype="varchar" precision="255" phptype="string" null="false" index="unique" />
 		<field key="filename_rename" dbtype="varchar" precision="255" phptype="string" null="true" />
-		<field key="filesize" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="filesize" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
 		<field key="fileformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="file_timestamp" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
-		<field key="file_modified" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="file_timestamp" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
+		<field key="file_modified" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 		<field key="play_seconds" dbtype="decimal" precision="7,2" phptype="float" null="false" default="0.00" />
 		<field key="track_volume" dbtype="float" phptype="float" null="false" default="0" />
 		<field key="md5_file" dbtype="varchar" precision="32" phptype="string" null="false" default="" />
-		<field key="disabled" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="is_disabled" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
 
 		<alias key="authors" field="artists" />
 		<alias key="topics" field="albums" />
 		<alias key="playtime" field="play_seconds" />
 
-		<index alias="UFILENAME" name="UFILENAME" primary="false" unique="true" type="BTREE" >
+		<index alias="FILENAMEINDEX" name="FILENAMEINDEX" primary="false" unique="true" type="BTREE" >
 			<column key="filename" length="" collation="A" null="false" />
 		</index>
 		<index alias="ALBUMINDEX" name="ALBUMINDEX" primary="false" unique="false" type="BTREE" >
@@ -40,13 +40,18 @@
 		<index alias="PARENTS" name="PARENTS" primary="false" unique="false" type="BTREE" >
 			<column key="parentid" length="" collation="A" null="false" />
 		</index>
-        <aggregate alias="Parent" class="MultimediaCollection" local="parentid" foreign="id" cardinality="one" owner="foreign" />
-        <composite alias="Info" class="MultimediaCollectionInfo" local="id" foreign="internalKey" cardinality="one" owner="local" />
-        <composite alias="Content" class="MultimediaContent" local="id" foreign="multimedialibrary" cardinality="many" owner="local" />		
+        <aggregate alias="Parent"   class="MultimediaCollection"        local="parentid" foreign="id"         cardinality="one"  owner="foreign" />
+        <composite alias="Childs"   class="MultimediaCollection"        local="id"       foreign="parentid"   cardinality="many" owner="local" />
+        <composite alias="Info"     class="MultimediaCollectionInfo"    local="id"       foreign="infokey"    cardinality="one"  owner="local" />
+        <composite alias="Comment"  class="MultimediaCollectionComment" local="id"       foreign="commentkey" cardinality="many" owner="local" />		
+        <composite alias="Liked"    class="MultimediaCollectionLiked"   local="id"       foreign="likedkey"   cardinality="many" owner="local" />		
+        <composite alias="Content"  class="MultimediaContent"           local="id"       foreign="contentkey" cardinality="many" owner="local" />		
+        <composite alias="PlaylistItem" class="MultimediaPlaylistItems" local="id"       foreign="itemkey"    cardinality="many" owner="local" />		
+        <composite alias="History"  class="MultimediaUserHistory"       local="id"       foreign="historykey" cardinality="many" owner="local" />		
 	</object>
 	
-	<object class="MultimediaCollectionInfo" table="multimedia_collection_info" extends="xPDOSimpleObject">
-		<field key="internalKey" dbtype="int" precision="10" phptype="integer" null="false" index="unique" />
+	<object class="MultimediaCollectionInfo" table="multimedia_collection_info" extends="xPDOObject">
+		<field key="infokey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
 		<field key="audio_dataformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
 		<field key="video_dataformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
 		<field key="audio_bitrate" dbtype="float" phptype="float" null="false" default="0" />
@@ -62,42 +67,179 @@
 		<field key="encoder_options" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
 		<field key="vbr_method" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
 
-		<index alias="PARENT" name="PARENT" primary="false" unique="true" type="BTREE" >
-			<column key="internalKey" length="" collation="A" null="false" />
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="infokey" length="" collation="A" null="false" />
 		</index>
-        <aggregate alias="InfoLibrary" class="MultimediaCollection" local="internalKey" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Collection" class="MultimediaCollection" local="infokey" foreign="id" cardinality="one" owner="foreign" />
 	</object>
 	
-	<object class="MultimediaContent" table="multimedia_content" extends="xPDOSimpleObject">
-		<field key="multimedialibrary" dbtype="int" precision="10" phptype="integer" null="false" index="index" />
-		<field key="resource_id" dbtype="int" precision="10" phptype="integer" null="false" />
-		<field key="library_id" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
-		<field key="content" dbtype="text" phptype="string" null="false" />
-		<field key="content_type" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="createdby" dbtype="int" precision="10" phptype="integer" null="false" />
-		<field key="createddate" dbtype="datetime" phptype="datetime" null="false" />
+	<object class="MultimediaCollectionComment" table="multimedia_collection_comment" extends="xPDOSimpleObject">
+		<field key="commentkey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="userid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
+		<field key="comment" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
 
+		<index alias="COLLECTIONID" name="COLLECTIONID" primary="false" unique="false" type="BTREE" >
+			<column key="commentkey" length="" collation="A" null="false" />
+		</index>
+		<index alias="NONUNIQUEUSER" name="NONUNIQUEUSER" primary="false" unique="false" type="BTREE" >
+			<column key="commentkey" length="" collation="A" null="false" />
+			<column key="userid" length="" collation="A" null="false" />
+			<column key="addedon" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="Collection" class="MultimediaCollection" local="commentkey" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Member" class="modUser" local="userid" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	
+	<object class="MultimediaCollectionLiked" table="multimedia_collection_liked" extends="xPDOObject">
+		<field key="likedkey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
+		<field key="memberid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
+		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="likedkey" length="" collation="A" null="false" />
+			<column key="memberid" length="" collation="A" null="false" />
+		</index>
+		<index alias="DATEINDEX" name="DATEINDEX" primary="false" unique="false" type="BTREE" >
+			<column key="likedkey" length="" collation="A" null="false" />
+			<column key="addedon" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="Collection" class="MultimediaCollection" local="likedkey" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Member" class="modUser" local="memberid" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+
+    <object class="MultimediaCollectionTag" table="multimedia_collection_tag" extends="xPDOObject">
+        <field key="tag" dbtype="integer" attributes="unsigned" precision="10" phptype="int" null="false" index="pk" />
+        <field key="ckey" dbtype="integer" attributes="unsigned" precision="10" phptype="int" null="false" index="pk" />
+
+        <index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+            <column key="tag" length="" collation="A" null="false" />
+            <column key="mcol" length="" collation="A" null="false" />
+        </index>
+
+        <aggregate alias="Tag" class="TaggerTag" local="tag" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Collection" class="MultimediaCollection" local="ckey" foreign="id" cardinality="one" owner="foreign" />
+    </object>
+	
+	<object class="MultimediaContent" table="multimedia_content" extends="xPDOSimpleObject">
+		<field key="contentkey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="content_json" dbtype="longtext" phptype="string" null="false" default="[]" />
+		<field key="content_type" dbtype="varchar" precision="255" phptype="string" null="false" default="image" />
+		<field key="createdby" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" />
+		<field key="createdon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="is_disabled" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+
+		<index alias="COLLECTIONID" name="COLLECTIONID" primary="false" unique="false" type="BTREE" >
+			<column key="contentkey" length="" collation="A" null="false" />
+		</index>
 		<index alias="CONTENTTYPE" name="CONTENTTYPE" primary="false" unique="false" type="BTREE" >
-			<column key="multimedialibrary" length="" collation="A" null="false" />
+			<column key="contentkey" length="" collation="A" null="false" />
 			<column key="content_type" length="" collation="A" null="false" />
 		</index>
-		<index alias="PARENTS" name="PARENTS" primary="false" unique="false" type="BTREE" >
-			<column key="multimedialibrary" length="" collation="A" null="false" />
-		</index>
-        <aggregate alias="ContentLibrary" class="MultimediaCollection" local="parentid" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Collection" class="MultimediaCollection" local="contentkey" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Creator" class="modUser" local="createdby" foreign="id" cardinality="one" owner="foreign" />
         <composite alias="Version" class="MultimediaContentVersion" local="id" foreign="contentid" cardinality="many" owner="local" />
 	</object>
 	
 	<object class="MultimediaContentVersion" table="multimedia_content_version" extends="xPDOSimpleObject">
-		<field key="contentid" dbtype="int" precision="10" phptype="integer" null="false" index="index" />
-		<field key="content" dbtype="text" phptype="string" null="false" />
-		<field key="editedby" dbtype="int" precision="11" phptype="integer" null="false" />
-		<field key="editeddate" dbtype="datetime" phptype="datetime" null="false" />
-		<field key="active" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="contentid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="edited_json" dbtype="longtext" phptype="string" null="false" default="[]" />
+		<field key="editedby" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" />
+		<field key="editedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="is_active" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
 
 		<index alias="PARENTS" name="PARENTS" primary="false" unique="false" type="BTREE" >
 			<column key="contentid" length="" collation="A" null="false" />
 		</index>
-        <aggregate alias="ContentVersion" class="MultimediaContent" local="contentid" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Content" class="MultimediaContent" local="contentid" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Editor"  class="modUser" local="editedby" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	
+	<object class="MultimediaPlaylist" table="multimedia_playlist" extends="xPDOSimpleObject">
+		<field key="palylist_owner" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="playlist_name" dbtype="varchar" precision="64" phptype="string" null="false" default="playlist" />
+		<field key="createdon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="is_public" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+
+		<index alias="UID" name="UID" primary="false" unique="false" type="BTREE" >
+			<column key="palylist_owner" length="" collation="A" null="false" />
+		</index>
+		<index alias="UNIQUEID" name="UNIQUEID" primary="false" unique="true" type="BTREE" >
+			<column key="palylist_owner" length="" collation="A" null="false" />
+			<column key="playlist_name" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="Owner" class="modUser" local="palylist_owner" foreign="id" cardinality="one" owner="foreign" />
+        <composite alias="Items" class="MultimediaPlaylistCollection" local="id" foreign="playlistid" cardinality="many" owner="local" />
+	</object>
+	
+	<object class="MultimediaPlaylistItems" table="multimedia_playlist_items" extends="xPDOSimpleObject">
+		<field key="playlistid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="itemkey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
+		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+
+		<index alias="PLAYLIST" name="PLAYLIST" primary="false" unique="false" type="BTREE" >
+			<column key="playlistid" length="" collation="A" null="false" />
+		</index>
+		<index alias="PLAYLISTITEM" name="PLAYLISTITEM" primary="false" unique="false" type="BTREE" >
+			<column key="playlistid" length="" collation="A" null="false" />
+			<column key="itemkey" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="Playlist" class="MultimediaPlaylist" local="playlistid"  foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Collection" class="MultimediaCollection" local="itemkey" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	
+	<object class="MultimediaPlaylistComment" table="multimedia_playlist_comment" extends="xPDOSimpleObject">
+		<field key="playlistid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="friendid" dbtype="integer" precision="10" phptype="integer" null="false" index="index" />
+		<field key="comment" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+
+		<index alias="PLAYLIST" name="PLAYLIST" primary="false" unique="false" type="BTREE" >
+			<column key="playlistid" length="" collation="A" null="false" />
+		</index>
+		<index alias="USERID" name="USERID" primary="false" unique="false" type="BTREE" >
+			<column key="friendid" length="" collation="A" null="false" />
+		</index>
+		<index alias="NONUNIQUEUSER" name="NONUNIQUEUSER" primary="false" unique="false" type="BTREE" >
+			<column key="playlistid" length="" collation="A" null="false" />
+			<column key="friendid" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="Playlist" class="MultimediaPlaylist" local="playlistid" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Friend" class="modUser" local="friendid" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	
+	<object class="MultimediaPlaylistLiked" table="multimedia_playlist_liked" extends="xPDOObject">
+		<field key="playlistid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
+		<field key="friendid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
+		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="playlistid" length="" collation="A" null="false" />
+			<column key="friendid" length="" collation="A" null="false" />
+		</index>
+		<index alias="DATEINDEX" name="DATEINDEX" primary="false" unique="false" type="BTREE" >
+			<column key="playlistid" length="" collation="A" null="false" />
+			<column key="addedon" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="Playlist" class="MultimediaPlaylist" local="playlistid" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Friend" class="modUser" local="friendid" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+	
+	<object class="MultimediaUserHistory" table="multimedia_user_history" extends="xPDOSimpleObject">
+		<field key="historykey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="userid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="history_type" dbtype="varchar" precision="16" phptype="string" null="false" default="play" />
+		<field key="historyon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="history_message" dbtype="longtext" phptype="string" null="false" default="[]" />
+
+		<index alias="COLID" name="COLID" primary="false" unique="false" type="BTREE" >
+			<column key="historykey" length="" collation="A" null="false" />
+		</index>
+		<index alias="UID" name="UID" primary="false" unique="false" type="BTREE" >
+			<column key="userid" length="" collation="A" null="false" />
+		</index>
+        <aggregate alias="Collection" class="MultimediaCollection" local="historykey" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="User" class="modUser" local="userid" foreign="id" cardinality="one" owner="foreign" />
 	</object>
 </model>
