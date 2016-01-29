@@ -2,28 +2,34 @@
 <model package="multimedialibrary" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1" phpdoc-package="multimedialibrary" phpdoc-subpackage="model">
 	<object class="MultimediaCollection" table="multimedia_collection" extends="xPDOSimpleObject">
 		<field key="parentid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
-		<field key="titles" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="artists" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
-		<field key="albums" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
-		<field key="tracks" dbtype="varchar" precision="7" phptype="string" null="false" default="" />
-		<field key="years" dbtype="year" precision="4" phptype="string" null="false" default="0000" index="index" />
-		<field key="genres" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="tags" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="remix" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="titles" dbtype="varchar" precision="255" phptype="string" null="false" default="(no title)" />
+		<field key="artists" dbtype="varchar" precision="255" phptype="string" null="true" index="index" />
+		<field key="artistsid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
+		<field key="albums" dbtype="varchar" precision="100" phptype="string" null="true" index="index" />
+		<field key="tracks" dbtype="integer" precision="4" phptype="integer" null="false" default="0" />
+		<field key="years" dbtype="integer" precision="4" phptype="integer" null="false" default="0" index="index" />
+		<field key="genres" dbtype="varchar" precision="32" phptype="string" null="true" />
+		<field key="remix" dbtype="varchar" precision="255" phptype="string" null="true" />
+		<field key="comments" dbtype="varchar" precision="255" phptype="string" null="true" />
+		<field key="recdate" dbtype="date" phptype="date" null="true" index="index" />
 		<field key="filename" dbtype="varchar" precision="255" phptype="string" null="false" index="unique" />
 		<field key="filename_rename" dbtype="varchar" precision="255" phptype="string" null="true" />
 		<field key="filesize" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
-		<field key="fileformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="fileformat" dbtype="varchar" precision="255" phptype="string" null="true" />
 		<field key="file_timestamp" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 		<field key="file_modified" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 		<field key="play_seconds" dbtype="decimal" precision="7,2" phptype="float" null="false" default="0.00" />
-		<field key="track_volume" dbtype="float" phptype="float" null="false" default="0" />
-		<field key="md5_file" dbtype="varchar" precision="32" phptype="string" null="false" default="" />
+		<field key="is_private" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="is_subscribe" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
 		<field key="is_disabled" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="idtags" dbtype="varchar" precision="64" phptype="string" null="true" />
+		<field key="md5_data" dbtype="varchar" precision="32" phptype="string" null="true" />
+		<field key="custom_data" dbtype="text" phptype="string" null="true" />
 
 		<alias key="authors" field="artists" />
 		<alias key="topics" field="albums" />
 		<alias key="playtime" field="play_seconds" />
+		<alias key="publishon" field="recdate" />
 
 		<index alias="FILENAMEINDEX" name="FILENAMEINDEX" primary="false" unique="true" type="BTREE" >
 			<column key="filename" length="" collation="A" null="false" />
@@ -32,6 +38,13 @@
 			<column key="albums" length="" collation="A" null="false" />
 		</index>
 		<index alias="YEARSINDEX" name="YEARSINDEX" primary="false" unique="false" type="BTREE" >
+			<column key="years" length="" collation="A" null="false" />
+		</index>
+		<index alias="RECORDING" name="RECORDING" primary="false" unique="false" type="BTREE" >
+			<column key="recdate" length="" collation="A" null="false" />
+		</index>
+		<index alias="ALBUMYEARINDEX" name="ALBUMYEARINDEX" primary="false" unique="false" type="BTREE" >
+			<column key="albums" length="" collation="A" null="false" />
 			<column key="years" length="" collation="A" null="false" />
 		</index>
 		<index alias="ARTISTSINDEX" name="ARTISTSINDEX" primary="false" unique="false" type="BTREE" >
@@ -52,20 +65,20 @@
 	
 	<object class="MultimediaCollectionInfo" table="multimedia_collection_info" extends="xPDOObject">
 		<field key="infokey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
-		<field key="audio_dataformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="video_dataformat" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="audio_bitrate" dbtype="float" phptype="float" null="false" default="0" />
-		<field key="video_bitrate" dbtype="float" phptype="float" null="false" default="0" />
-		<field key="comments" dbtype="text" phptype="string" null="false" />
-		<field key="comments_all" dbtype="longtext" phptype="string" null="false" />
-		<field key="comments_id3v1" dbtype="text" phptype="string" null="false" />
-		<field key="comments_id3v2" dbtype="text" phptype="string" null="false" />
-		<field key="comments_ape" dbtype="text" phptype="string" null="false" />
-		<field key="comments_lyrics3" dbtype="longtext" phptype="string" null="false" />
-		<field key="info_warning" dbtype="longtext" phptype="string" null="false" />
-		<field key="info_error" dbtype="longtext" phptype="string" null="false" />
-		<field key="encoder_options" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="vbr_method" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="audio_dataformat" dbtype="varchar" precision="32" phptype="string" null="true" />
+		<field key="audio_bitrate" dbtype="float" phptype="float" null="true" />
+		<field key="video_dataformat" dbtype="varchar" precision="32" phptype="string" null="true" />
+		<field key="video_bitrate" dbtype="float" phptype="float" null="true" />
+		<field key="track_volume" dbtype="float" phptype="float" null="true" />
+		<field key="comments_all" dbtype="longtext" phptype="string" null="true" />
+		<field key="comments_id3v1" dbtype="text" phptype="string" null="true" />
+		<field key="comments_id3v2" dbtype="text" phptype="string" null="true" />
+		<field key="comments_ape" dbtype="text" phptype="string" null="true" />
+		<field key="comments_lyrics3" dbtype="longtext" phptype="string" null="true" />
+		<field key="info_warning" dbtype="text" phptype="string" null="true" />
+		<field key="info_error" dbtype="text" phptype="string" null="true" />
+		<field key="encoder_options" dbtype="varchar" precision="64" phptype="string" null="true" />
+		<field key="vbr_method" dbtype="varchar" precision="64" phptype="string" null="true" />
 
 		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
 			<column key="infokey" length="" collation="A" null="false" />
@@ -77,7 +90,7 @@
 		<field key="commentkey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
 		<field key="userid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
 		<field key="comment" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="addedon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 
 		<index alias="COLLECTIONID" name="COLLECTIONID" primary="false" unique="false" type="BTREE" >
 			<column key="commentkey" length="" collation="A" null="false" />
@@ -94,7 +107,7 @@
 	<object class="MultimediaCollectionLiked" table="multimedia_collection_liked" extends="xPDOObject">
 		<field key="likedkey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
 		<field key="memberid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
-		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="addedon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 
 
 		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
@@ -111,7 +124,7 @@
 
     <object class="MultimediaCollectionTag" table="multimedia_collection_tag" extends="xPDOObject">
         <field key="tag" dbtype="integer" attributes="unsigned" precision="10" phptype="int" null="false" index="pk" />
-        <field key="ckey" dbtype="integer" attributes="unsigned" precision="10" phptype="int" null="false" index="pk" />
+        <field key="mcol" dbtype="integer" attributes="unsigned" precision="10" phptype="int" null="false" index="pk" />
 
         <index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
             <column key="tag" length="" collation="A" null="false" />
@@ -119,15 +132,15 @@
         </index>
 
         <aggregate alias="Tag" class="TaggerTag" local="tag" foreign="id" cardinality="one" owner="foreign" />
-        <aggregate alias="Collection" class="MultimediaCollection" local="ckey" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Collection" class="MultimediaCollection" local="mcol" foreign="id" cardinality="one" owner="foreign" />
     </object>
 	
 	<object class="MultimediaContent" table="multimedia_content" extends="xPDOSimpleObject">
 		<field key="contentkey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
-		<field key="content_json" dbtype="longtext" phptype="string" null="false" default="[]" />
+		<field key="content_json" dbtype="longtext" phptype="string" null="false" />
 		<field key="content_type" dbtype="varchar" precision="255" phptype="string" null="false" default="image" />
 		<field key="createdby" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" />
-		<field key="createdon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="createdon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 		<field key="is_disabled" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
 
 		<index alias="COLLECTIONID" name="COLLECTIONID" primary="false" unique="false" type="BTREE" >
@@ -144,9 +157,9 @@
 	
 	<object class="MultimediaContentVersion" table="multimedia_content_version" extends="xPDOSimpleObject">
 		<field key="contentid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
-		<field key="edited_json" dbtype="longtext" phptype="string" null="false" default="[]" />
+		<field key="edited_json" dbtype="longtext" phptype="string" null="false" />
 		<field key="editedby" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" />
-		<field key="editedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="editedon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 		<field key="is_active" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
 
 		<index alias="PARENTS" name="PARENTS" primary="false" unique="false" type="BTREE" >
@@ -159,7 +172,7 @@
 	<object class="MultimediaPlaylist" table="multimedia_playlist" extends="xPDOSimpleObject">
 		<field key="palylist_owner" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
 		<field key="playlist_name" dbtype="varchar" precision="64" phptype="string" null="false" default="playlist" />
-		<field key="createdon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="createdon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 		<field key="is_public" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
 
 		<index alias="UID" name="UID" primary="false" unique="false" type="BTREE" >
@@ -176,7 +189,7 @@
 	<object class="MultimediaPlaylistItems" table="multimedia_playlist_items" extends="xPDOSimpleObject">
 		<field key="playlistid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
 		<field key="itemkey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" default="0" />
-		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="addedon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 
 		<index alias="PLAYLIST" name="PLAYLIST" primary="false" unique="false" type="BTREE" >
 			<column key="playlistid" length="" collation="A" null="false" />
@@ -191,9 +204,9 @@
 	
 	<object class="MultimediaPlaylistComment" table="multimedia_playlist_comment" extends="xPDOSimpleObject">
 		<field key="playlistid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
-		<field key="friendid" dbtype="integer" precision="10" phptype="integer" null="false" index="index" />
-		<field key="comment" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="friendid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
+		<field key="comment" dbtype="varchar" precision="255" phptype="string" null="false" />
+		<field key="addedon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 
 		<index alias="PLAYLIST" name="PLAYLIST" primary="false" unique="false" type="BTREE" >
 			<column key="playlistid" length="" collation="A" null="false" />
@@ -212,7 +225,7 @@
 	<object class="MultimediaPlaylistLiked" table="multimedia_playlist_liked" extends="xPDOObject">
 		<field key="playlistid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
 		<field key="friendid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="pk" />
-		<field key="addedon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
+		<field key="addedon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
 
 		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
 			<column key="playlistid" length="" collation="A" null="false" />
@@ -230,8 +243,8 @@
 		<field key="historykey" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
 		<field key="userid" dbtype="integer" attributes="unsigned" precision="10" phptype="integer" null="false" index="index" />
 		<field key="history_type" dbtype="varchar" precision="16" phptype="string" null="false" default="play" />
-		<field key="historyon" dbtype="integer" precision="20" phptype="integer" null="false" default="0" />
-		<field key="history_message" dbtype="longtext" phptype="string" null="false" default="[]" />
+		<field key="historyon" dbtype="integer" attributes="unsigned" precision="20" phptype="integer" null="false" default="0" />
+		<field key="history_message" dbtype="longtext" phptype="string" null="true" />
 
 		<index alias="COLID" name="COLID" primary="false" unique="false" type="BTREE" >
 			<column key="historykey" length="" collation="A" null="false" />

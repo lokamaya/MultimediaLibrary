@@ -16,7 +16,7 @@ $xpdo_meta_map['MultimediaContent']= array (
   'fields' => 
   array (
     'contentkey' => NULL,
-    'content_json' => '[]',
+    'content_json' => NULL,
     'content_type' => 'image',
     'createdby' => NULL,
     'createdon' => 0,
@@ -38,7 +38,6 @@ $xpdo_meta_map['MultimediaContent']= array (
       'dbtype' => 'longtext',
       'phptype' => 'string',
       'null' => false,
-      'default' => '[]',
     ),
     'content_type' => 
     array (
@@ -59,6 +58,7 @@ $xpdo_meta_map['MultimediaContent']= array (
     'createdon' => 
     array (
       'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '20',
       'phptype' => 'integer',
       'null' => false,

@@ -14,13 +14,31 @@
  */
 $settings = array();
 
+$settings['multimedialibrary.groups_admin']= $modx->newObject('modSystemSetting');
+$settings['multimedialibrary.groups_admin']->fromArray(array(
+    'key' => 'multimedialibrary.groups_admin',
+    'value' => 'Administrator',
+    'xtype' => 'textfield',
+    'namespace' => 'multimedialibrary',
+    'area' => 'security',
+),'',true,true);
+
+$settings['multimedialibrary.groups_user']= $modx->newObject('modSystemSetting');
+$settings['multimedialibrary.groups_user']->fromArray(array(
+    'key' => 'multimedialibrary.groups_user',
+    'value' => 'Member',
+    'xtype' => 'textfield',
+    'namespace' => 'multimedialibrary',
+    'area' => 'security',
+),'',true,true);
+
 $settings['multimedialibrary.allowed_extension']= $modx->newObject('modSystemSetting');
 $settings['multimedialibrary.allowed_extension']->fromArray(array(
     'key' => 'multimedialibrary.allowed_extension',
     'value' => 'aac,asf,avi,flac,m3u,m4a,m4v,mov,mp1,mp2,mp3,mp4,mpeg,mpg,oga,ogg,ogv,wav,webm,wma,wmv',
     'xtype' => 'textfield',
     'namespace' => 'multimedialibrary',
-    'area' => 'site',
+    'area' => 'file',
 ),'',true,true);
 
 $settings['multimedialibrary.path']= $modx->newObject('modSystemSetting');
@@ -29,7 +47,7 @@ $settings['multimedialibrary.path']->fromArray(array(
     'value' => 'files/',
     'xtype' => 'textfield',
     'namespace' => 'multimedialibrary',
-    'area' => 'site',
+    'area' => 'file',
 ),'',true,true);
 
 $settings['multimedialibrary.path_relative']= $modx->newObject('modSystemSetting');
@@ -37,6 +55,24 @@ $settings['multimedialibrary.path_relative']->fromArray(array(
     'key' => 'multimedialibrary.path_relative',
     'value' => true,
     'xtype' => 'combo-boolean',
+    'namespace' => 'multimedialibrary',
+    'area' => 'file',
+),'',true,true);
+
+$settings['multimedialibrary.tagger_group']= $modx->newObject('modSystemSetting');
+$settings['multimedialibrary.tagger_group']->fromArray(array(
+    'key' => 'multimedialibrary.tagger_group',
+    'value' => '1',
+    'xtype' => 'textfield',
+    'namespace' => 'multimedialibrary',
+    'area' => 'area',
+),'',true,true);
+
+$settings['multimedialibrary.list_per_page']= $modx->newObject('modSystemSetting');
+$settings['multimedialibrary.list_per_page']->fromArray(array(
+    'key' => 'multimedialibrary.list_per_page',
+    'value' => 10,
+    'xtype' => 'numberfield',
     'namespace' => 'multimedialibrary',
     'area' => 'site',
 ),'',true,true);

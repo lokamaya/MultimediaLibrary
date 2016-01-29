@@ -42,6 +42,7 @@ $xpdo_meta_map['MultimediaPlaylistLiked']= array (
     'addedon' => 
     array (
       'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '20',
       'phptype' => 'integer',
       'null' => false,

@@ -16,7 +16,7 @@ $xpdo_meta_map['MultimediaContentVersion']= array (
   'fields' => 
   array (
     'contentid' => NULL,
-    'edited_json' => '[]',
+    'edited_json' => NULL,
     'editedby' => NULL,
     'editedon' => 0,
     'is_active' => 0,
@@ -37,7 +37,6 @@ $xpdo_meta_map['MultimediaContentVersion']= array (
       'dbtype' => 'longtext',
       'phptype' => 'string',
       'null' => false,
-      'default' => '[]',
     ),
     'editedby' => 
     array (
@@ -50,6 +49,7 @@ $xpdo_meta_map['MultimediaContentVersion']= array (
     'editedon' => 
     array (
       'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '20',
       'phptype' => 'integer',
       'null' => false,

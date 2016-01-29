@@ -16,7 +16,7 @@ $xpdo_meta_map['MultimediaCollectionTag']= array (
   'fields' => 
   array (
     'tag' => NULL,
-    'ckey' => NULL,
+    'mcol' => NULL,
   ),
   'fieldMeta' => 
   array (
@@ -29,7 +29,7 @@ $xpdo_meta_map['MultimediaCollectionTag']= array (
       'null' => false,
       'index' => 'pk',
     ),
-    'ckey' => 
+    'mcol' => 
     array (
       'dbtype' => 'integer',
       'attributes' => 'unsigned',
@@ -77,7 +77,7 @@ $xpdo_meta_map['MultimediaCollectionTag']= array (
     'Collection' => 
     array (
       'class' => 'MultimediaCollection',
-      'local' => 'ckey',
+      'local' => 'mcol',
       'foreign' => 'id',
       'cardinality' => 'one',
       'owner' => 'foreign',

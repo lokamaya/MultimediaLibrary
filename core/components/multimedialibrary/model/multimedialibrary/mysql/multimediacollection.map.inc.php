@@ -16,24 +16,29 @@ $xpdo_meta_map['MultimediaCollection']= array (
   'fields' => 
   array (
     'parentid' => NULL,
-    'titles' => '',
-    'artists' => '',
-    'albums' => '',
-    'tracks' => '',
-    'years' => '0000',
-    'genres' => '',
-    'tags' => '',
-    'remix' => '',
+    'titles' => '(no title)',
+    'artists' => NULL,
+    'artistsid' => 0,
+    'albums' => NULL,
+    'tracks' => 0,
+    'years' => 0,
+    'genres' => NULL,
+    'remix' => NULL,
+    'comments' => NULL,
+    'recdate' => NULL,
     'filename' => NULL,
     'filename_rename' => NULL,
     'filesize' => 0,
-    'fileformat' => '',
+    'fileformat' => NULL,
     'file_timestamp' => 0,
     'file_modified' => 0,
     'play_seconds' => 0,
-    'track_volume' => 0,
-    'md5_file' => '',
+    'is_private' => 0,
+    'is_subscribe' => 0,
     'is_disabled' => 0,
+    'idtags' => NULL,
+    'md5_data' => NULL,
+    'custom_data' => NULL,
   ),
   'fieldMeta' => 
   array (
@@ -52,66 +57,77 @@ $xpdo_meta_map['MultimediaCollection']= array (
       'precision' => '255',
       'phptype' => 'string',
       'null' => false,
-      'default' => '',
+      'default' => '(no title)',
     ),
     'artists' => 
     array (
       'dbtype' => 'varchar',
       'precision' => '255',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '',
+      'null' => true,
       'index' => 'index',
+    ),
+    'artistsid' => 
+    array (
+      'dbtype' => 'integer',
+      'attributes' => 'unsigned',
+      'precision' => '10',
+      'phptype' => 'integer',
+      'null' => false,
+      'default' => 0,
     ),
     'albums' => 
     array (
       'dbtype' => 'varchar',
-      'precision' => '255',
+      'precision' => '100',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '',
+      'null' => true,
       'index' => 'index',
     ),
     'tracks' => 
     array (
-      'dbtype' => 'varchar',
-      'precision' => '7',
-      'phptype' => 'string',
+      'dbtype' => 'integer',
+      'precision' => '4',
+      'phptype' => 'integer',
       'null' => false,
-      'default' => '',
+      'default' => 0,
     ),
     'years' => 
     array (
-      'dbtype' => 'year',
+      'dbtype' => 'integer',
       'precision' => '4',
-      'phptype' => 'string',
+      'phptype' => 'integer',
       'null' => false,
-      'default' => '0000',
+      'default' => 0,
       'index' => 'index',
     ),
     'genres' => 
     array (
       'dbtype' => 'varchar',
-      'precision' => '255',
+      'precision' => '32',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '',
-    ),
-    'tags' => 
-    array (
-      'dbtype' => 'varchar',
-      'precision' => '255',
-      'phptype' => 'string',
-      'null' => false,
-      'default' => '',
+      'null' => true,
     ),
     'remix' => 
     array (
       'dbtype' => 'varchar',
       'precision' => '255',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '',
+      'null' => true,
+    ),
+    'comments' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '255',
+      'phptype' => 'string',
+      'null' => true,
+    ),
+    'recdate' => 
+    array (
+      'dbtype' => 'date',
+      'phptype' => 'date',
+      'null' => true,
+      'index' => 'index',
     ),
     'filename' => 
     array (
@@ -142,8 +158,7 @@ $xpdo_meta_map['MultimediaCollection']= array (
       'dbtype' => 'varchar',
       'precision' => '255',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '',
+      'null' => true,
     ),
     'file_timestamp' => 
     array (
@@ -171,20 +186,21 @@ $xpdo_meta_map['MultimediaCollection']= array (
       'null' => false,
       'default' => 0,
     ),
-    'track_volume' => 
+    'is_private' => 
     array (
-      'dbtype' => 'float',
-      'phptype' => 'float',
+      'dbtype' => 'tinyint',
+      'precision' => '1',
+      'phptype' => 'integer',
       'null' => false,
       'default' => 0,
     ),
-    'md5_file' => 
+    'is_subscribe' => 
     array (
-      'dbtype' => 'varchar',
-      'precision' => '32',
-      'phptype' => 'string',
+      'dbtype' => 'tinyint',
+      'precision' => '1',
+      'phptype' => 'integer',
       'null' => false,
-      'default' => '',
+      'default' => 0,
     ),
     'is_disabled' => 
     array (
@@ -194,12 +210,33 @@ $xpdo_meta_map['MultimediaCollection']= array (
       'null' => false,
       'default' => 0,
     ),
+    'idtags' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '64',
+      'phptype' => 'string',
+      'null' => true,
+    ),
+    'md5_data' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '32',
+      'phptype' => 'string',
+      'null' => true,
+    ),
+    'custom_data' => 
+    array (
+      'dbtype' => 'text',
+      'phptype' => 'string',
+      'null' => true,
+    ),
   ),
   'fieldAliases' => 
   array (
     'authors' => 'artists',
     'topics' => 'albums',
     'playtime' => 'play_seconds',
+    'publishon' => 'recdate',
   ),
   'indexes' => 
   array (
@@ -243,6 +280,44 @@ $xpdo_meta_map['MultimediaCollection']= array (
       'type' => 'BTREE',
       'columns' => 
       array (
+        'years' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
+    'RECORDING' => 
+    array (
+      'alias' => 'RECORDING',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'recdate' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
+      ),
+    ),
+    'ALBUMYEARINDEX' => 
+    array (
+      'alias' => 'ALBUMYEARINDEX',
+      'primary' => false,
+      'unique' => false,
+      'type' => 'BTREE',
+      'columns' => 
+      array (
+        'albums' => 
+        array (
+          'length' => '',
+          'collation' => 'A',
+          'null' => false,
+        ),
         'years' => 
         array (
           'length' => '',

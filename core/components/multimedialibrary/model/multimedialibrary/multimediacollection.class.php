@@ -21,25 +21,28 @@ class MultimediaCollection extends xPDOSimpleObject  {
     public function save($cacheFlag = null) {
         //$now = new DateTime();
         
-        $md5_file = $this->generateMD5File();
+        $md5_data = $this->libraryGenerateMD5Data();
         $this->isMD5match = true;
         if (!$this->isNew()) {
-            if ($md5_file != $this->get('md5_file')) $this->isMD5match = false;
+            if ($md5_data != $this->get('md5_data')) $this->isMD5match = false;
+        } else {
+            $this->set('md5_data', $md5_data);
         }
-        $this->set('md5_file', $md5_file);
 
         return parent :: save($cacheFlag);
     }
     
-    public function generateMD5File() {
+    public function libraryGenerateMD5Data() {
         $data  = $this->get('titles');
         $data .= $this->get('artists');
         $data .= $this->get('albums');
         $data .= $this->get('tracks');
         $data .= $this->get('years');
         $data .= $this->get('genres');
+        $data .= $this->get('remix');
         $data .= $this->get('filename');
         $data .= $this->get('filesize');
+        $data .= $this->get('idtags');
         
         return md5($data);
     }

@@ -13,9 +13,17 @@ if ($object->xpdo) {
             
             $manager = $modx->getManager();
             $manager->createObjectContainer('MultimediaCollection');
+            $manager->createObjectContainer('MultimediaCollectionComment');
             $manager->createObjectContainer('MultimediaCollectionInfo');
+            $manager->createObjectContainer('MultimediaCollectionLiked');
+            $manager->createObjectContainer('MultimediaCollectionTag');
             $manager->createObjectContainer('MultimediaContent');
             $manager->createObjectContainer('MultimediaContentVersion');
+            $manager->createObjectContainer('MultimediaPlaylist');
+            $manager->createObjectContainer('MultimediaPlaylistItems');
+            $manager->createObjectContainer('MultimediaPlaylistComment');
+            $manager->createObjectContainer('MultimediaPlaylistLiked');
+            $manager->createObjectContainer('MultimediaUserHistory');
             break;
         case xPDOTransport::ACTION_UNINSTALL:
             $modx =& $object->xpdo;

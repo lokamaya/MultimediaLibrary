@@ -16,11 +16,11 @@ $xpdo_meta_map['MultimediaCollectionInfo']= array (
   'fields' => 
   array (
     'infokey' => NULL,
-    'audio_dataformat' => '',
-    'video_dataformat' => '',
-    'audio_bitrate' => 0,
-    'video_bitrate' => 0,
-    'comments' => NULL,
+    'audio_dataformat' => NULL,
+    'audio_bitrate' => NULL,
+    'video_dataformat' => NULL,
+    'video_bitrate' => NULL,
+    'track_volume' => NULL,
     'comments_all' => NULL,
     'comments_id3v1' => NULL,
     'comments_id3v2' => NULL,
@@ -28,8 +28,8 @@ $xpdo_meta_map['MultimediaCollectionInfo']= array (
     'comments_lyrics3' => NULL,
     'info_warning' => NULL,
     'info_error' => NULL,
-    'encoder_options' => '',
-    'vbr_method' => '',
+    'encoder_options' => NULL,
+    'vbr_method' => NULL,
   ),
   'fieldMeta' => 
   array (
@@ -45,96 +45,90 @@ $xpdo_meta_map['MultimediaCollectionInfo']= array (
     'audio_dataformat' => 
     array (
       'dbtype' => 'varchar',
-      'precision' => '255',
+      'precision' => '32',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '',
-    ),
-    'video_dataformat' => 
-    array (
-      'dbtype' => 'varchar',
-      'precision' => '255',
-      'phptype' => 'string',
-      'null' => false,
-      'default' => '',
+      'null' => true,
     ),
     'audio_bitrate' => 
     array (
       'dbtype' => 'float',
       'phptype' => 'float',
-      'null' => false,
-      'default' => 0,
+      'null' => true,
+    ),
+    'video_dataformat' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '32',
+      'phptype' => 'string',
+      'null' => true,
     ),
     'video_bitrate' => 
     array (
       'dbtype' => 'float',
       'phptype' => 'float',
-      'null' => false,
-      'default' => 0,
+      'null' => true,
     ),
-    'comments' => 
+    'track_volume' => 
     array (
-      'dbtype' => 'text',
-      'phptype' => 'string',
-      'null' => false,
+      'dbtype' => 'float',
+      'phptype' => 'float',
+      'null' => true,
     ),
     'comments_all' => 
     array (
       'dbtype' => 'longtext',
       'phptype' => 'string',
-      'null' => false,
+      'null' => true,
     ),
     'comments_id3v1' => 
     array (
       'dbtype' => 'text',
       'phptype' => 'string',
-      'null' => false,
+      'null' => true,
     ),
     'comments_id3v2' => 
     array (
       'dbtype' => 'text',
       'phptype' => 'string',
-      'null' => false,
+      'null' => true,
     ),
     'comments_ape' => 
     array (
       'dbtype' => 'text',
       'phptype' => 'string',
-      'null' => false,
+      'null' => true,
     ),
     'comments_lyrics3' => 
     array (
       'dbtype' => 'longtext',
       'phptype' => 'string',
-      'null' => false,
+      'null' => true,
     ),
     'info_warning' => 
     array (
-      'dbtype' => 'longtext',
+      'dbtype' => 'text',
       'phptype' => 'string',
-      'null' => false,
+      'null' => true,
     ),
     'info_error' => 
     array (
-      'dbtype' => 'longtext',
+      'dbtype' => 'text',
       'phptype' => 'string',
-      'null' => false,
+      'null' => true,
     ),
     'encoder_options' => 
     array (
       'dbtype' => 'varchar',
-      'precision' => '255',
+      'precision' => '64',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '',
+      'null' => true,
     ),
     'vbr_method' => 
     array (
       'dbtype' => 'varchar',
-      'precision' => '255',
+      'precision' => '64',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '',
+      'null' => true,
     ),
   ),
   'indexes' => 

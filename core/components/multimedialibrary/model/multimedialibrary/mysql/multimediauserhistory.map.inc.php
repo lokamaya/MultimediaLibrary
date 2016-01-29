@@ -19,7 +19,7 @@ $xpdo_meta_map['MultimediaUserHistory']= array (
     'userid' => NULL,
     'history_type' => 'play',
     'historyon' => 0,
-    'history_message' => '[]',
+    'history_message' => NULL,
   ),
   'fieldMeta' => 
   array (
@@ -52,6 +52,7 @@ $xpdo_meta_map['MultimediaUserHistory']= array (
     'historyon' => 
     array (
       'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '20',
       'phptype' => 'integer',
       'null' => false,
@@ -61,8 +62,7 @@ $xpdo_meta_map['MultimediaUserHistory']= array (
     array (
       'dbtype' => 'longtext',
       'phptype' => 'string',
-      'null' => false,
-      'default' => '[]',
+      'null' => true,
     ),
   ),
   'indexes' => 

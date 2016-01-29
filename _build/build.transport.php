@@ -12,7 +12,7 @@ set_time_limit(0);
 define('PKG_NAME',      'MultimediaLibrary');
 define('PKG_NAME_LOWER',strtolower(PKG_NAME));
 define('PKG_VERSION',   '0.2.0');
-define('PKG_RELEASE',   'alpha');
+define('PKG_RELEASE',   'alpha3');
 
 /* define sources */
 $root = dirname(dirname(__FILE__)) . '/';
@@ -68,6 +68,10 @@ $vehicle = $builder->createVehicle($object, array(
 $vehicle->resolve('file',array(
     'source' => $sources['source_core'],
     'target' => "return MODX_CORE_PATH . 'components/';",
+));
+$vehicle->resolve('file',array(
+    'source' => $sources['source_assets'],
+    'target' => "return MODX_ASSETS_PATH . 'components/';",
 ));
 $builder->putVehicle($vehicle);
 

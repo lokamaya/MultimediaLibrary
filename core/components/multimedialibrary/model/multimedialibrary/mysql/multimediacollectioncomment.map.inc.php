@@ -51,6 +51,7 @@ $xpdo_meta_map['MultimediaCollectionComment']= array (
     'addedon' => 
     array (
       'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '20',
       'phptype' => 'integer',
       'null' => false,

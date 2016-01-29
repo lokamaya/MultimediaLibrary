@@ -1,0 +1,29 @@
+.scandir {
+    width: 96%;
+    height: 200px;
+    margin: 0 auto;
+    border: 1px solid #999999;
+    padding: 20px;
+    overflow: scroll;
+}
+
+.scandir a, .scandir a:link {
+    display:block;
+    margin: 5px 0;
+    padding: 3px;
+    color: #999;
+    border: 1px dotted: #cccccc;
+    text-decoration: none !important;
+    outline: #fff;
+    outline: none !important;
+}
+
+.scandir a.scan-completed {
+    color: green !important;
+    border: 1px dotted: green !important;
+}
+
+.scandir a:focus {
+    border: 1px dotted red;
+    color: red;
+}

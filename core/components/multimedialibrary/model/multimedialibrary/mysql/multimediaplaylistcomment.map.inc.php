@@ -17,7 +17,7 @@ $xpdo_meta_map['MultimediaPlaylistComment']= array (
   array (
     'playlistid' => NULL,
     'friendid' => NULL,
-    'comment' => '',
+    'comment' => NULL,
     'addedon' => 0,
   ),
   'fieldMeta' => 
@@ -34,6 +34,7 @@ $xpdo_meta_map['MultimediaPlaylistComment']= array (
     'friendid' => 
     array (
       'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '10',
       'phptype' => 'integer',
       'null' => false,
@@ -45,11 +46,11 @@ $xpdo_meta_map['MultimediaPlaylistComment']= array (
       'precision' => '255',
       'phptype' => 'string',
       'null' => false,
-      'default' => '',
     ),
     'addedon' => 
     array (
       'dbtype' => 'integer',
+      'attributes' => 'unsigned',
       'precision' => '20',
       'phptype' => 'integer',
       'null' => false,
